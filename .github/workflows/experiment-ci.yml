@@ -1,0 +1,22 @@
+name: Experiment CI - cargo check
+
+on:
+  push:
+    branches:
+      - edidada/main
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      # Compile the same example node crates the upstream workflow builds,
+      # without the release-publishing side effects.
+      - name: Build example nodes (existing crates)
+        run: cargo build --release -p rust-dataflow-example-node -p rust-dataflow-example-status-node -p rust-dataflow-example-sink -p rust-dataflow-example-sink-dynamic
